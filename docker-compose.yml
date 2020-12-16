@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  web:
+    container_name: flask-on-docker
+    build: ./services/web
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./services/web:/usr/src/app
+    ports:
+      - 4000:5000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+  db:
+    container_name: postgres
+    image: postgres:12-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=users
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    ports:
+      - 5406:5432
+
+volumes:
+  postgres_data:
